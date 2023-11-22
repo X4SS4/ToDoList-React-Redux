@@ -120,7 +120,7 @@ function Root() {
                     ) : (
                       <i>No Title</i>
                     )}{" "}
-                    {task.isDone && <span>★</span>}
+                    {task.isDone && <span>■</span>}
                   </NavLink>
                 </li>
               ))}

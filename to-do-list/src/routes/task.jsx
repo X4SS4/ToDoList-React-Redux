@@ -88,7 +88,7 @@ function Favorite({ task }) {
             : "Add to isDones"
         }
       >
-        {isDone ? "★" : "☆"}
+        {isDone ? "■" : "□"}
       </button>
     </fetcher.Form>
   );
