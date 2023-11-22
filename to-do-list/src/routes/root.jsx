@@ -8,7 +8,9 @@ import {
   useSubmit,
 } from "react-router-dom";
 import { getTasks, createTask } from "../tasks";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+
+
 
 export async function action() {
   const task = await createTask();
@@ -23,10 +25,12 @@ export async function loader({ request }) {
 }
 
 
+
 function Root() {
   const { tasks, q } = useLoaderData();
   const navigation = useNavigation();
   const submit = useSubmit();
+  const [filterValue, setFilterValue] = useState(null);
 
   const searching =
     navigation.location &&
@@ -38,6 +42,11 @@ function Root() {
     document.getElementById("q").value = q;
   }, [q]);
 
+  const handleSelectChange = (event) => {
+    if (event.currentTarget.value === "All") { setFilterValue(null) }
+    else if (event.currentTarget.value === "Done") { setFilterValue(true) }
+    else if (event.currentTarget.value === "Undone") { setFilterValue(false) }
+  }
 
   return (
     <>
@@ -75,7 +84,11 @@ function Root() {
           </Form>
         </div>
         <div>
-          <select name="filter" id="filter-select">
+          <select
+            name="filter"
+            id="filter-select"
+            onChange={handleSelectChange}
+          >
             <option value="all">All</option>
             <option value="done">Done</option>
             <option value="undone">Undone</option>
@@ -84,7 +97,11 @@ function Root() {
         <nav>
           {tasks.length ? (
             <ul>
-              {tasks.map((task) => (
+              {tasks.filter(task => {
+                return filterValue != null
+                  ? task.isDone === filterValue
+                  : task;
+              }).map((task) => (
                 <li key={task.id}>
                   <NavLink
                     to={`tasks/${task.id}`}
@@ -96,21 +113,21 @@ function Root() {
                           : ""
                     }
                   >
-                    {task.first || task.last ? (
+                    {task.title ? (
                       <>
-                        {task.first} {task.last}
+                        {task.title}
                       </>
                     ) : (
-                      <i>No Name</i>
+                      <i>No Title</i>
                     )}{" "}
-                    {task.favorite && <span>★</span>}
+                    {task.isDone && <span>★</span>}
                   </NavLink>
                 </li>
               ))}
             </ul>
           ) : (
             <p>
-              <i>No tasks</i>
+              <i>No Any Tasks</i>
             </p>
           )}
         </nav>

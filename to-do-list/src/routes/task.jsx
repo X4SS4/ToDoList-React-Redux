@@ -8,7 +8,7 @@ import { getTask, updateTask } from "../tasks";
 export async function action({ request, params }) {
   let formData = await request.formData();
   return updateTask(params.taskId, {
-    favorite: formData.get("favorite") === "true",
+    isDone: formData.get("isDone") === "true",
   });
 }
 
@@ -32,28 +32,18 @@ function Task() {
     <div id="task">
       <div>
         <h1>
-          {task.first || task.last ? (
+          {task.title ? (
             <>
-              {task.first} {task.last}
+              {task.title}
             </>
           ) : (
-            <i>No Name</i>
+            <i>No Title</i>
           )}{" "}
           <Favorite task={task} />
         </h1>
 
-        {task.twitter && (
-          <p>
-            <a
-              target="_blank"
-              href={`https://twitter.com/${task.twitter}`}
-            >
-              {task.twitter}
-            </a>
-          </p>
-        )}
-
-        {task.notes && <p>{task.notes}</p>}
+        {task.createdAt && <p>Created at: {`${new Date(task.createdAt)}`}</p>}
+        {task.description && <p>Description: {task.description}</p>}
 
         <div>
           <Form action="edit">
@@ -81,25 +71,24 @@ function Task() {
 }
 
 function Favorite({ task }) {
-  // yes, this is a `let` for later
   const fetcher = useFetcher();
-  let favorite = task.favorite;
+  let isDone = task.isDone;
   if (fetcher.formData) {
-    favorite = fetcher.formData.get("favorite") === "true";
+    isDone = fetcher.formData.get("isDone") === "true";
   }
 
   return (
     <fetcher.Form method="post">
       <button
-        name="favorite"
-        value={favorite ? "false" : "true"}
+        name="isDone"
+        value={isDone ? "false" : "true"}
         aria-label={
-          favorite
-            ? "Remove from favorites"
-            : "Add to favorites"
+          isDone
+            ? "Remove from isDones"
+            : "Add to isDones"
         }
       >
-        {favorite ? "★" : "☆"}
+        {isDone ? "★" : "☆"}
       </button>
     </fetcher.Form>
   );

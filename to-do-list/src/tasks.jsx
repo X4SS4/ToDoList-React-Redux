@@ -7,7 +7,7 @@ export async function getTasks(query) {
   let tasks = await localforage.getItem("tasks");
   if (!tasks) tasks = [];
   if (query) {
-    tasks = matchSorter(tasks, query, { keys: ["first", "last"] });
+    tasks = matchSorter(tasks, query, { keys: ["title", "description"] });
   }
   return tasks.sort(sortBy("last", "createdAt"));
 }
@@ -15,7 +15,7 @@ export async function getTasks(query) {
 export async function createTask() {
   await fakeNetwork();
   let id = Math.random().toString(36).substring(2, 9);
-  let task = { id, createdAt: Date.now() };
+  let task = { id, createdAt: Date.now(), isDone: false };
   let tasks = await getTasks();
   tasks.unshift(task);
   await set(tasks);
@@ -68,6 +68,6 @@ async function fakeNetwork(key) {
 
   fakeCache[key] = true;
   return new Promise(res => {
-    setTimeout(res, Math.random() * 800);
+    setTimeout(res, Math.random() * 900);
   });
 }

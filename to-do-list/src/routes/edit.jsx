@@ -16,7 +16,7 @@ export async function action({ request, params }) {
 function EditTask() {
     const { task } = useLoaderData();
     const navigate = useNavigate();
-    const now = new Date();
+    const now = `${new Date(task.createdAt)}`;
 
     return (
         <Form method="post" id="task-form">
@@ -31,20 +31,19 @@ function EditTask() {
                 />
             </p>
             <label>
-                <span>Creation date</span>
+                <span>Creation date: </span>
                 <p
                     type="text"
-                    name="creation-date"
-                    readonly
+                    name="creationDate"
                 >
-                    {`${now}`}
+                    {now}
                 </p>
             </label>
             <label>
                 <span>Description</span>
                 <textarea
                     name="description"
-                    defaultValue={task.notes}
+                    defaultValue={task.description}
                     rows={6}
                 />
             </label>
