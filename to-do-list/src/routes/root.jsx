@@ -43,9 +43,9 @@ function Root() {
   }, [q]);
 
   const handleSelectChange = (event) => {
-    if (event.currentTarget.value === "All") { setFilterValue(null) }
-    else if (event.currentTarget.value === "Done") { setFilterValue(true) }
-    else if (event.currentTarget.value === "Undone") { setFilterValue(false) }
+    if (event.currentTarget.value === "all") { setFilterValue(null) }
+    else if (event.currentTarget.value === "done") { setFilterValue(true) }
+    else if (event.currentTarget.value === "undone") { setFilterValue(false) }
   }
 
   return (
